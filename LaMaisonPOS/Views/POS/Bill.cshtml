@@ -1,0 +1,138 @@
+@model LaMaisonPOS.Models.ViewModels.BillViewModel
+@{
+    ViewData["Title"] = "Bill";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow" id="billPrintArea">
+                <div class="card-body p-5">
+                    <!-- Header -->
+                    <div class="text-center mb-4">
+                        <h1 class="display-4 fw-bold">La Maison</h1>
+                        <p class="text-muted">Premium Jewelry & Accessories</p>
+                        <hr>
+                    </div>
+
+                    <!-- Order Info -->
+                    <div class="row mb-4">
+                        <div class="col-6">
+                            <p class="mb-1"><strong>Order Number:</strong> @Model.OrderNumber</p>
+                            <p class="mb-1"><strong>Customer:</strong> @Model.CustomerName</p>
+                        </div>
+                        <div class="col-6 text-end">
+                            <p class="mb-1"><strong>Date:</strong> @Model.OrderDate.ToString("dd/MM/yyyy")</p>
+                            <p class="mb-1"><strong>Time:</strong> @Model.OrderDate.ToString("HH:mm:ss")</p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Items -->
+                    <table class="table table-borderless">
+                        <thead class="border-bottom">
+                            <tr>
+                                <th>Item</th>
+                                <th class="text-center">Qty</th>
+                                <th class="text-end">Price</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Items)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold">@item.ProductName</div>
+                                        <small class="text-muted">@item.ProductCode</small>
+                                    </td>
+                                    <td class="text-center">@item.Quantity</td>
+                                    <td class="text-end">₹@item.Price.ToString("N2")</td>
+                                    <td class="text-end">₹@item.Subtotal.ToString("N2")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                    <hr>
+
+                    <!-- Totals -->
+                    <div class="row">
+                        <div class="col-6 offset-6">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Subtotal:</span>
+                                <strong>₹@Model.Subtotal.ToString("N2")</strong>
+                            </div>
+                            @if (Model.TaxAmount > 0)
+                            {
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Tax:</span>
+                                    <strong>₹@Model.TaxAmount.ToString("N2")</strong>
+                                </div>
+                            }
+                            @if (Model.DiscountAmount > 0)
+                            {
+                                <div class="d-flex justify-content-between mb-2 text-success">
+                                    <span>Discount:</span>
+                                    <strong>-₹@Model.DiscountAmount.ToString("N2")</strong>
+                                </div>
+                            }
+                            <hr>
+                            <div class="d-flex justify-content-between mb-3">
+                                <h5>Total Amount:</h5>
+                                <h5 class="fw-bold">₹@Model.TotalAmount.ToString("N2")</h5>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Cash Received:</span>
+                                <strong>₹@Model.CashReceived.ToString("N2")</strong>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Change:</span>
+                                <strong class="text-success">₹@Model.Change.ToString("N2")</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <!-- Footer -->
+                    <div class="text-center mt-4">
+                        <p class="mb-1"><strong>Thank you for shopping with us!</strong></p>
+                        <p class="text-muted small">Visit us at www.lamaison.com</p>
+                        <div class="mt-4">
+                            <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjUwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSI1IiBoZWlnaHQ9IjUwIiB4PSIwIiBmaWxsPSIjMDAwIi8+PHJlY3Qgd2lkdGg9IjIiIGhlaWdodD0iNTAiIHg9IjgiIGZpbGw9IiMwMDAiLz48cmVjdCB3aWR0aD0iMyIgaGVpZ2h0PSI1MCIgeD0iMTIiIGZpbGw9IiMwMDAiLz48cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1MCIgeD0iMTgiIGZpbGw9IiMwMDAiLz48cmVjdCB3aWR0aD0iMiIgaGVpZ2h0PSI1MCIgeD0iMjYiIGZpbGw9IiMwMDAiLz48cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI1MCIgeD0iMzAiIGZpbGw9IiMwMDAiLz48cmVjdCB3aWR0aD0iMyIgaGVpZ2h0PSI1MCIgeD0iMzciIGZpbGw9IiMwMDAiLz48cmVjdCB3aWR0aD0iMiIgaGVpZ2h0PSI1MCIgeD0iNDMiIGZpbGw9IiMwMDAiLz48L3N2Zz4=" alt="Barcode" style="max-width: 200px;">
+                            <p class="small text-muted mt-2">@Model.OrderNumber</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="text-center mt-4 no-print">
+                <button class="btn btn-primary btn-lg me-2" onclick="window.print()">
+                    <i class="bi bi-printer"></i> Print Bill
+                </button>
+                <a asp-action="Index" class="btn btn-secondary btn-lg">
+                    <i class="bi bi-arrow-left"></i> Back to POS
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@media print {
+        .no-print {
+            display: none !important;
+        }
+        body {
+            padding: 0;
+            margin: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 100%;
+        }
+    }
+</style>
